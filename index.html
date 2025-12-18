@@ -17,11 +17,86 @@
         align-items: center;
         height: 100vh;
     }
+
+    button {
+        font-size: 3rem;
+        padding: 2.5rem 5rem;
+        border-radius: 5rem;
+        background: #ff6a48;
+        color: white;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+    }
+    object {
+        margin-left: 10vw;
+    }
+    .absolute {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+    }
+    .hidden {
+        display: none;
+    }
+    .overlay {
+        overflow: hidden;
+    }
+    .overlay object {
+        scale: 1;
+        opacity: 1;
+        filter: blur(0);
+        transition: scale 1.5s ease-out, opacity 1.5s ease-out, filter 1.5s ease-out;
+        mix-blend-mode: color-dodge;
+    }
+    .animated object {
+        scale: 1.25;
+        opacity: 0;
+        filter: blur(10px);
+    }
 </style>
 </head>
 <body>
-    <div class="container">
-        <object data="huuva-animated-logo.svg" type="image/svg+xml"></object>
+    <div class="container absolute hidden overlay">
+        <object data="huuva-static.svg" type="image/svg+xml"></object>
     </div>
+    
+    <div class="container real">
+        <button>Play</button>
+        <object style="display: none;" data="huuva-animated-logo.svg" type="image/svg+xml"></object>
+    </div>
+    <audio id="audio">
+        <source src="music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <script>
+        const button = document.querySelector('button');
+        const audio = document.getElementById('audio');
+        const svgObject = document.querySelector('.real object');
+        const overlay = document.querySelector('.overlay');
+
+        button.addEventListener('click', () => {
+            // set volume to 50%
+            audio.volume = 0.3;
+            setTimeout(() => {
+                audio.play();
+            }, 1000); // pause after 5 seconds
+            setTimeout(() => {
+                overlay.classList.remove('hidden');
+                requestAnimationFrame(() => {
+                    overlay.classList.add('animated');
+                }); // slight delay to trigger transition
+            }, 4200); // pause after 10 seconds
+            svgObject.style.display = 'block';
+            button.style.display = 'none';
+        });
+    </script>
 </body>
 </html>
